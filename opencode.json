@@ -1,9 +1,0 @@
-{
-  "$schema": "https://opencode.ai/config.json",
-  "command": {
-    "push lox": {
-      "description": "一键 add → 分析变更 → 生成 commit message → 更新 README → push",
-      "template": "执行以下步骤，将本项目变更自动提交并推送到 origin (https://github.com/Promin3/lox.git)：\n\n## 步骤\n\n### 1. 暂存所有变更\n```bash\ngit add -A\n```\n\n### 2. 获取变更内容\n```bash\ngit diff --cached --stat\ngit diff --cached\n```\n\n### 3. 分析并生成 commit message\n根据 diff 内容，用中文分析变更类型并生成 commit message。格式：\n```\n<type>: <简短概括>\n\n- 要点1\n- 要点2\n```\ntype: feat(新功能) / fix(修复) / refactor(重构) / docs(文档) / test(测试) / chore(构建)\n\n**重要**：直接执行 `git commit -m \"<生成的message>\"` 提交，不要询问。\n\n### 4. 检查并更新 README\n- 读取 README.md 的\"项目结构\"部分\n- 运行 `git diff --cached --name-only --diff-filter=A -- src/main/java/com/lox/` 检测新增源文件\n- 如果 README.md 的项目结构缺少新增文件，更新 README 的项目结构树\n- 如果有 README 变更，执行 `git add README.md && git commit -m \"docs: 更新 README 项目结构\"`\n\n### 5. 推送\n```bash\ngit push origin HEAD\n```\n\n## 约束\n- 全自动执行，中间不要询问确认\n- 如果第4步产生了 commit，第5步会把两个 commit 一起推送\n- 如果没有任何变更，输出\"没有需要提交的变更\"并结束"
-    }
-  }
-}
