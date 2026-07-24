@@ -2,17 +2,6 @@
 
 基于 *Crafting Interpreters* 的 Lox 语言 Java 实现。
 
-## 提交与推送
-
-使用 opencode 的 `/push` 命令一键完成 add → commit → README 更新 → push：
-
-```bash
-# 在 opencode 中输入
-/push
-```
-
-该命令自动：暂存变更 → 分析 diff 生成 commit message → 检测新增文件更新 README → 推送到 origin
-
 ## 构建
 
 ```bash
