@@ -42,6 +42,9 @@ src/main/java/com/lox/
 ├── TokenType.java     # Token 类型枚举
 ├── RuntimeError.java  # 运行时异常
 ├── Environment.java   # 变量作用域环境
+├── LoxCallable.java   # 可调用对象接口
+├── LoxFunction.java   # Lox 函数运行时表示（闭包）
+├── Return.java        # return 异常（控制流跳出）
 └── tool/
     └── GenerateAst.java  # AST 节点代码生成器
 ```

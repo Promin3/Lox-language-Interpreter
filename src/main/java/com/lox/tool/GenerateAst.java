@@ -6,14 +6,22 @@ import java.util.Arrays;
 import java.util.List;
 
 
-// 生成语法树 ast 的节点
-// auto code generating tool for Expr.java
+/*
+    生成语法树 ast 的节点
+    auto code generating tool for Expr.java
+
+    Expr：算什么 → 求值，返回结果，可嵌套。
+    Stmt：做什么 → 执行副作用，不返回值，不可嵌套在表达式中。
+ */
 public class GenerateAst {
     public static void main(String[] args) throws IOException {
         String outputDir = "src/main/java/com/lox";
+
+
         defineAst(outputDir, "Expr", Arrays.asList(
                 "Assign   : Token name, Expr value",
                 "Binary   : Expr left, Token operator, Expr right",
+                "Call     : Expr callee, Token paren, List<Expr> arguments",
                 "Grouping : Expr expression",
                 "Literal  : Object value",
                 "Logical  : Expr left, Token operator, Expr right",
@@ -24,9 +32,12 @@ public class GenerateAst {
         defineAst(outputDir, "Stmt", Arrays.asList(
                 "Block      : List<Stmt> statements",
                 "Expression : Expr expression",
+                "Function   : Token name, List<Token> params," +
+                            " List<Stmt> body",
                 "If         : Expr condition, Stmt thenBranch," +
                             " Stmt elseBranch",
                 "Print      : Expr expression",
+                "Return     : Token keyword, Expr value",
                 "Var        : Token name, Expr initializer",
                 "While      : Expr condition, Stmt body"
         ));
