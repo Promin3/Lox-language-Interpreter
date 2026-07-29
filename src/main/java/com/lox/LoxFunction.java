@@ -14,6 +14,7 @@ class LoxFunction implements LoxCallable {
     @Override
     public Object call(Interpreter interpreter,
                        List<Object> arguments) {
+        // every time we call a function, we create a new environment by using the closure binding to the Function
         Environment environment = new Environment(closure);
         for (int i = 0; i < declaration.params.size(); i++) {
             environment.define(declaration.params.get(i).lexeme,

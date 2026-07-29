@@ -1,13 +1,112 @@
+// ---- 字面量与表达式 ----
+print 42;              // expect: 42
+print 3.14;            // expect: 3.14
+print "hello";         // expect: hello
+print true;            // expect: true
+print nil;             // expect: nil
+
+// ---- 一元运算 ----
+print -5;              // expect: -5
+print !true;           // expect: false
+print !false;          // expect: true
+print !!42;            // expect: true
+
+// ---- 二元运算 ----
+print 1 + 2;           // expect: 3
+print 10 - 3;          // expect: 7
+print 4 * 5;           // expect: 20
+print 20 / 4;          // expect: 5
+print "a" + "b";       // expect: ab
+
+// ---- 比较运算 ----
+print 3 < 5;           // expect: true
+print 3 > 5;           // expect: false
+print 3 <= 3;          // expect: true
+print 5 >= 5;          // expect: true
+print 3 == 3;          // expect: true
+print 3 != 4;          // expect: true
+
+// ---- 变量声明与赋值 ----
+var x = 10;
+print x;               // expect: 10
+x = 20;
+print x;               // expect: 20
+
+// ---- 块作用域 ----
+var a = "outer";
+{
+  var a = "inner";
+  print a;             // expect: inner
+}
+print a;               // expect: outer
+
+// ---- if / else ----
+if (true) print "yes";   // expect: yes
+if (false) print "no"; else print "nope";  // expect: nope
+
+// ---- while ----
+var i = 0;
+while (i < 3) {
+  print i;
+  i = i + 1;
+}
+// expect: 0
+// expect: 1
+// expect: 2
+
+// ---- 短路逻辑 ----
+print false and "nope";    // expect: false
+print true or "yes";       // expect: true
+print nil or "fallback";   // expect: fallback
+
+// ---- 函数定义与调用 ----
+fun add(a, b) {
+  return a + b;
+}
+print add(3, 4);           // expect: 7
+
+fun factorial(n) {
+  if (n <= 1) return 1;
+  return n * factorial(n - 1);
+}
+print factorial(5);        // expect: 120
+
+// ---- 闭包 ----
 fun makeCounter() {
   var i = 0;
   fun count() {
     i = i + 1;
-    print i;
+    return i;
   }
-
   return count;
 }
 
-var counter = makeCounter();
-counter(); // "1".
-counter(); // "2".
+var c1 = makeCounter();
+print c1();                // expect: 1
+print c1();                // expect: 2
+
+var c2 = makeCounter();
+print c2();                // expect: 1
+
+// ---- 闭包 + 遮蔽（验证 resolver） ----
+var outer = "global";
+{
+  fun getOuter() {
+    return outer;
+  }
+  print getOuter();        // expect: global
+
+  var outer = "local";
+  print outer;             // expect: local
+  print getOuter();        // expect: global  (闭包捕获的是外层的 outer)
+}
+
+// ---- 高阶函数 ----
+fun twice(f, x) {
+  return f(f(x));
+}
+fun inc(n) { return n + 1; }
+print twice(inc, 5);       // expect: 7
+
+// ---- clock 内建函数 ----
+print clock() >= 0;        // expect: true
