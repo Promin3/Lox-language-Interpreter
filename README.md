@@ -35,6 +35,7 @@ src/main/java/com/lox/
 ├── Lox.java           # 入口，负责编排整个流程
 ├── Scanner.java       # 词法分析：源码 → Token 列表
 ├── Parser.java        # 语法分析：Token 列表 → AST
+├── Resolver.java      # 语义分析：静态作用域解析 + 变量绑定
 ├── Interpreter.java   # 解释执行：遍历 AST 求值
 ├── Expr.java          # 表达式 AST 节点定义
 ├── Stmt.java          # 语句 AST 节点定义
