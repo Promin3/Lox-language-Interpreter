@@ -4,9 +4,19 @@ import java.util.Map;
 
 class LoxClass implements LoxCallable{
     final String name;
+    private final Map<String, LoxFunction> methods;
 
-    LoxClass(String name) {
+    LoxClass(String name, Map<String, LoxFunction> methods) {
         this.name = name;
+        this.methods = methods;
+    }
+
+    LoxFunction findMethod(String name) {
+        if (methods.containsKey(name)) {
+            return methods.get(name);
+        }
+
+        return null;
     }
 
     @Override
@@ -19,6 +29,7 @@ class LoxClass implements LoxCallable{
         return 0;
     }
 
+    // className() 创建实例
     @Override
     public Object call(Interpreter interpreter, List<Object> arguments) {
         LoxInstance instance = new LoxInstance(this);

@@ -110,3 +110,12 @@ print twice(inc, 5);       // expect: 7
 
 // ---- clock 内建函数 ----
 print clock() >= 0;        // expect: true
+
+// ---- class ---
+class Bacon {
+  eat() {
+    print "Crunch crunch crunch!";
+  }
+}
+
+Bacon().eat();
