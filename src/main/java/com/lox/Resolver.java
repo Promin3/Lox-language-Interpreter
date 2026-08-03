@@ -11,17 +11,29 @@ import java.util.Stack;
 class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     private final Interpreter interpreter;
     private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+
+
+    private enum FunctionType {
+        NONE,
+        FUNCTION,
+        INITIALIZER,
+        METHOD
+    }
+
     private FunctionType currentFunction = FunctionType.NONE;
+
+    private enum ClassType {
+        NONE,
+        CLASS
+    }
+
+    // Its value tells us if we are currently inside a class declaration while traversing the syntax tree.
+    private ClassType currentClass = ClassType.NONE;
 
     Resolver(Interpreter interpreter) {
         this.interpreter = interpreter;
     }
 
-    private enum FunctionType {
-        NONE,
-        FUNCTION,
-        METHOD
-    }
 
     @Override
     public Void visitBlockStmt(Stmt.Block stmt) {
@@ -33,13 +45,26 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitClassStmt(Stmt.Class stmt) {
+        ClassType enclosingClass = currentClass;
+        currentClass = ClassType.CLASS;
         declare(stmt.name);
         define(stmt.name);
 
+        beginScope();
+        scopes.peek().put("this", true);
+
         for (Stmt.Function method : stmt.methods) {
             FunctionType declaration = FunctionType.METHOD;
+
+            if (method.name.lexeme.equals("init")) {
+                declaration = FunctionType.INITIALIZER;
+            }
+
             resolveFunction(method, declaration);
         }
+
+        endScope();
+        currentClass = enclosingClass;
         return null;
     }
 
@@ -80,6 +105,10 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         }
 
         if (stmt.value != null) {
+            if (currentFunction == FunctionType.INITIALIZER) {
+                Lox.error(stmt.keyword,
+                        "Can't return a value from an initializer.");
+            }
             resolve(stmt.value);
         }
 
@@ -160,6 +189,18 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
     }
 
     @Override
+    public Void visitThisExpr(Expr.This expr) {
+        if (currentClass == ClassType.NONE) {
+            Lox.error(expr.keyword,
+                    "Can't use 'this' outside of a class.");
+            return null;
+        }
+
+        resolveLocal(expr, expr.keyword);
+        return null;
+    }
+
+    @Override
     public Void visitUnaryExpr(Expr.Unary expr) {
         resolve(expr.right);
         return null;
@@ -203,6 +244,9 @@ class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
         scopes.peek().put(name.lexeme, true);
     }
 
+
+    // 作用是在静态分析阶段确定每个变量引用的「作用域深度」（distance）
+    // 然后存入 interpreter.locals 这个 Map<Expr, Integer> 中，供运行时直接使用。
     private void resolveLocal(Expr expr, Token name) {
         for (int i = scopes.size() - 1; i >= 0; i--) {
             if (scopes.get(i).containsKey(name.lexeme)) {
