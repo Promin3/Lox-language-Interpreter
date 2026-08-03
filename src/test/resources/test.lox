@@ -119,3 +119,14 @@ class Bacon {
 }
 
 Bacon().eat();
+
+// --- super class ---
+class Doughnut {
+  cook() {
+    print "Fry until golden brown.";
+  }
+}
+
+class BostonCream < Doughnut {}
+
+BostonCream().cook();
