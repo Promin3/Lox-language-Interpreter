@@ -1,4 +1,4 @@
-
+```
 program        → declaration* EOF ;
 
 declaration    → classDecl
@@ -68,3 +68,4 @@ arguments      → expression ( "," expression )* ;
 primary        → "true" | "false" | "nil" | "this"
                 | NUMBER | STRING | IDENTIFIER | "(" expression ")"
                 | "super" "." IDENTIFIER ;
+```
